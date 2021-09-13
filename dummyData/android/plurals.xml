@@ -1,0 +1,6 @@
+<xml>
+  <plural id="cow">
+    <singular>cow</singular>
+    <other>cows</other>
+  </plural>
+</xml>
