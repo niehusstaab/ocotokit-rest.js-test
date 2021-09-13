@@ -15,19 +15,19 @@ const repo = 'ocotokit-rest.js-test'; // sad purposeful typo
 const octo = github.getOctokit(process.env.GH_API_TOKEN).rest;
 
 async function main() {
-  const base = 'main'; // 'rc';
+  const base = 'rc';
   const newBranchName = 'misc/updated-files';
   const isAndroid = true;
   let filesToCommit;
 
   // make some dummy changes
   if (isAndroid) {
-    await fs.appendFile(__dirname + '../dummyData/android/strings.xml', 'appended data');
-    await fs.appendFile(__dirname + '../dummyData/android/plurals.xml', 'appended data');
+    await fs.appendFile(path.join(__dirname, '../dummyData/android/strings.xml'), 'appended data');
+    await fs.appendFile(path.join(__dirname, '../dummyData/android/plurals.xml'), 'appended data');
     filesToCommit = ['**/*.xml'];
   } else {
-    await fs.appendFile(__dirname + '../dummyData/ios/Localizable.strings', 'appended data');
-    await fs.appendFile(__dirname + '../dummyData/ios/Localizabel.stringsdict', 'appended data');
+    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizable.strings'), 'appended data');
+    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizabel.stringsdict'), 'appended data');
     filesToComimt = ['**/*.strings', '**/*.stringsdict'];
   }
 
@@ -55,7 +55,7 @@ async function main() {
   })
   const commitSha = refData.object.sha
   const { data: commitData } = await octo.git.getCommit({
-    owne,
+    owner,
     repo,
     commit_sha: commitSha,
   })
@@ -108,7 +108,7 @@ async function main() {
 
   // add commit to target branch
   await octo.git.updateRef({
-    owner: org,
+    owner,
     repo,
     ref: `heads/${newBranchName}`,
     sha: newCommit.sha,
