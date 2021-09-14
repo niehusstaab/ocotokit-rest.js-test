@@ -69,7 +69,6 @@ async function main() {
   }
 
   // convert chosen files to commit into blobs for gh api
-  // TODO: issue here for ios 2 len arr
   const filesPaths = (await Promise.mapSeries(filesToCommit, async (path) => await glob(path))).flat();
   console.log(`foudn file paths: ${filesPaths}`);
   const filesBlobs = await Promise.mapSeries(filesPaths, async (filePath) => {
