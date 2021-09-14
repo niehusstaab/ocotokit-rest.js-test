@@ -17,7 +17,7 @@ const octo = github.getOctokit(process.env.GH_API_TOKEN).rest;
 async function main() {
   const base = 'rc';
   const newBranchName = 'misc/updated-files';
-  const isAndroid = true;
+  const isAndroid = false;
   let filesToCommit;
 
   // make some dummy changes
@@ -27,8 +27,8 @@ async function main() {
     filesToCommit = ['**/*.xml'];
   } else {
     await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizable.strings'), 'appended data');
-    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizabel.stringsdict'), 'appended data');
-    filesToComimt = ['**/*.strings', '**/*.stringsdict'];
+    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizable.stringsdict'), 'appended data');
+    filesToCommit = ['**/*.strings', '**/*.stringsdict'];
   }
 
   // get sha of base branch so we can branch off it for new branch
@@ -65,7 +65,8 @@ async function main() {
   }
 
   // convert chosen files to commit into blobs for gh api
-  const filesPaths = (await Promise.mapSeries(filesToCommit, async (path) => glob(path))).flat();
+  // TODO: issue here for ios 2 len arr
+  const filesPaths = (await Promise.mapSeries(filesToCommit, async (path) => await glob(path))).flat();
   console.log(`foudn file paths: ${filesPaths}`);
   const filesBlobs = await Promise.mapSeries(filesPaths, async (filePath) => {
     // create blob for file path
