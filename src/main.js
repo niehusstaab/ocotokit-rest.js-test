@@ -20,17 +20,6 @@ async function main() {
   const isAndroid = false;
   let filesToCommit;
 
-  // make some dummy changes
-  if (isAndroid) {
-    await fs.appendFile(path.join(__dirname, '../dummyData/android/strings.xml'), 'appended data');
-    await fs.appendFile(path.join(__dirname, '../dummyData/android/plurals.xml'), 'appended data');
-    filesToCommit = ['**/*.xml'];
-  } else {
-    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizable.strings'), 'appended data');
-    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizable.stringsdict'), 'appended data');
-    filesToCommit = ['**/*.strings', '**/*.stringsdict'];
-  }
-
   // get sha of base branch so we can branch off it for new branch
   const { data: branchRefData } = await octo.git.getRef({
     owner,
@@ -47,6 +36,21 @@ async function main() {
     sha: baseBranchSha,
   });
   
+  // clone repo from new branch for changes to be made
+  // pseudo code
+  // await exec(`git clone --depth 1 --branch ${newBranchName} https://git.ssh/owner/repo.git`);
+
+  // make some dummy changes on new branch
+  if (isAndroid) {
+    await fs.appendFile(path.join(__dirname, '../dummyData/android/strings.xml'), 'appended data');
+    await fs.appendFile(path.join(__dirname, '../dummyData/android/plurals.xml'), 'appended data');
+    filesToCommit = ['**/*.xml'];
+  } else {
+    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizable.strings'), 'appended data');
+    await fs.appendFile(path.join(__dirname, '../dummyData/ios/Localizable.stringsdict'), 'appended data');
+    filesToCommit = ['**/*.strings', '**/*.stringsdict'];
+  }
+
   // get current commit on new branch head
   const { data: refData } = await octo.git.getRef({
     owner,
